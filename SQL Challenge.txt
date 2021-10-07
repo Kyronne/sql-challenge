@@ -1,90 +1,128 @@
-1. SELECT first_name, last_name FROM actor;
+1.  List all actors
+SELECT first_name, last_name FROM actor;
 
-first_name  | last_name    |
-
-
-2. SELECT last_name FROM actor WHERE first_name="John";
+2. Find the surname of the actor with the forename 'John'.
+SELECT last_name FROM actor WHERE first_name="John";
 SUVARI
-3.SELECT*FROM actor WHERE last_name="Neeson";
+3. Find all actors with surname 'Neeson'
+SELECT*FROM actor WHERE last_name="Neeson";
+
+4. Find all actors with ID numbers divisible by 10.
+SELECT * FROM actor WHERE (actor_id % 10) = 0;
 
 
-
-4.SELECT * FROM actor WHERE (actor_id % 10) = 0;
-
-
-5. SELECT description FROM film WHERE film_id=100;
+5. What is the description of the movie with an ID of 100?
+SELECT description FROM film WHERE film_id=100;
 
 
-6. SELECT title, rating FROM film WHERE rating="R";
+6. Find every R-rated movie.
+SELECT title, rating FROM film WHERE rating="R";
 
 
-7. SELECT title, rating FROM film WHERE rating!="R";
+7. Find every non-R-rated movie.
+SELECT title, rating FROM film WHERE rating!="R";
 
 
-8.SELECT length FROM film ORDER BY length LIMIT 10;
+8. Find the ten shortest movies.
+SELECT length FROM film ORDER BY length LIMIT 10;
 
 
-9. SELECT title, length FROM film ORDER BY length DESC;
+9. Find the movies with the longest runtime, without using LIMIT
+SELECT title, length FROM film ORDER BY length DESC;
 
+10. Find all movies that have deleted scenes.
+SELECT title, special_features FROM film WHERE special_features="Deleted Scenes";
 
+11.  Using HAVING , reverse-alphabetically list the last names that are not repeated.
+SELECT DISTINCT last_name FROM actor HAVING last_name IS NOT NULL ORDER BY last_name DESC;
 
-10. SELECT title, special_features FROM film WHERE special_features="Deleted Scenes";
+12. Using HAVING , list the last names that appear more than once, from highest to lowest frequency.
+SELECT last_name, COUNT(last_name) FROM actor GROUP BY last_name HAVING COUNT(last_name) > 1 ORDER BY COUNT(last_name) DESC;
 
-
-11. SELECT DISTINCT last_name FROM actor HAVING last_name IS NOT NULL ORDER BY last_name DESC;
-
-12. SELECT last_name, COUNT(last_name) FROM actor GROUP BY last_name HAVING COUNT(last_name) > 1 ORDER BY COUNT(last_name) DESC;
-
-13.SELECT COUNT(film_id), actor_id FROM film_actor GROUP BY actor_id ORDER BY COUNT(film_id) DESC LIMIT 1; 
+13. Which actor has appeared in the most films?
+SELECT COUNT(film_id), actor_id FROM film_actor GROUP BY actor_id ORDER BY COUNT(film_id) DESC LIMIT 1; 
     -> SELECT first_name, last_name
     -> FROM actor WHERE actor_id=(
     -> SELECT COUNT(film_id) AS number_of_films
     -> FROM film_actor GROUP BY actor_id ORDER BY number_of_films DESC LIMIT 1);
 
-14. SELECT rental_date, rental_date + interval (select rental_duration FROM film where film_id = 1) day AS due_date FROM rental WHERE rental_id = (select rental_id from rental order by rental_id desc limit 1);
+14. 'Academy Dinosaur' has been rented out, when is it due to be returned?
+SELECT rental_date, rental_date + interval (select rental_duration FROM film where film_id = 1) day AS due_date FROM rental WHERE rental_id = (select rental_id from rental order by rental_id desc limit 1);
 
-15. SELECT rental_id, inventory_id, film_id, film FROM rental, inventory, film Where rental_id = rentals_id;
+15. What is the average runtime of all films?
+SELECT rental_id, inventory_id, film_id, film FROM rental, inventory, film Where rental_id = rentals_id;
 
-16. SELECT AVG(length) from film;
+16. List the average runtime for every film category.
 
-17. 
+SELECT AVG(length) from film;
+
+17. List all movies featuring a robot.
+SELECT title FROM film WHERE description LIKE '%robot%';
 
 
-18. 
+18. How many movies were released in 2010?
 SELECT release_year FROM film WHERE release_year = "2010";
 
 SELECT release_year, COUNT(title) FROM film GROUP BY release_year ORDER BY COUNT(release_year);
 
 
-19. 
+19. Find the titles of all the horror movies.
 SELECT title FROM film_list WHERE category="horror";
 
-20.
+20. List the full name of the staff member with the ID of 2.
 SELECT first_name, last_name FROM staff WHERE staff_id=2;
 
-21
+21 List all the movies that Fred Costner has appeared in
 select actor_id from actor WHERE first_name="Fred" AND last_name="Costner";
 SELECT film_id, title FROM film WHERE film_id IN (select actor_id FROM film_actor where actor_id=16);
 
 
-22: SELECT DISTINCT COUNT(country) from Country;
+22: How many distinct countries are there? 
+SELECT DISTINCT COUNT(country) from Country;
 
-23: SELECT name from language ORDER BY name desc;
+23: List the name of every language in reverse-alphabetical order
+SELECT name from language ORDER BY name desc;
 
-24: SELECT first_name, last_name FROM actor WHERE last_name LIKE '%son';
+24: List the full names of every actor whose surname ends with '-son' in alphabetical order by their forename.
+SELECT first_name, last_name FROM actor WHERE last_name LIKE '%son';
 
-25: SELECT category, COUNT(title) FROM film_list GROUP BY category  ORDER BY COUNT(category) DESC LIMIT 2;
+25: Which category contains the most films?
+SELECT category, COUNT(title) FROM film_list GROUP BY category  ORDER BY COUNT(category) DESC LIMIT 2;
 
 
 World 
 
-1. SELECT COUNT(countrycode) FROM city WHERE countrycode = "USA";
+1. Using COUNT , get the number of cities in the USA.
+SELECT COUNT(countrycode) FROM city WHERE countrycode = "USA";
 
-2. SELECT population, lifeexpectancy FROM country WHERE name = "argentina";
+2. Find out the population and life expectancy for people in Argentina.
+SELECT population, lifeexpectancy FROM country WHERE name = "argentina";
 
-3. SELECT lifeexpectancy, name FROM country WHERE lifeexpectancy IS NOT NULL ORDER BY lifeexpectancy DESC LIMIT 1;
+3. Using IS NOT NULL , ORDER BY , and LIMIT , which country has the highest life expectancy?
+SELECT lifeexpectancy, name FROM country WHERE lifeexpectancy IS NOT NULL ORDER BY lifeexpectancy DESC LIMIT 1;
 
-4. SELECT country.Name, city.Name 
+4. Using JOIN ... ON , find the capital city of Spain.
+SELECT country.Name, city.Name 
 FROM country 
 JOIN city ON country.Capital=city.id 
 WHERE country.Name='Spain';
+
+5. Using JOIN ... ON , list all the languages spoken in the Southeast Asia region
+SELECT countrylanguage.language, country.Name 
+FROM countrylanguage 
+JOIN country ON country.Code=countrylanguage.countrycode 
+WHERE country.region='Southeast Asia';
+
+6. Using a single query, list 25 cities around the world that start with the letter F.
+SELECT name FROM country WHERE name LIKE 'F%';
+
+7.Using COUNT and JOIN ... ON , get the number of cities in China.
+SELECT COUNT(countrycode) 
+FROM city 
+JOIN country ON country.code=city.countrycode
+WHERE country.Name='China';
+
+
+8. Using IS NOT NULL , ORDER BY , and LIMIT , which country has the lowest population? Discard non-zero populations
+SELECT population, name FROM country WHERE population IS NOT NULL AND population = 0 ORDER BY population ASC LIMIT 1;
+
