@@ -126,3 +126,44 @@ WHERE country.Name='China';
 8. Using IS NOT NULL , ORDER BY , and LIMIT , which country has the lowest population? Discard non-zero populations
 SELECT population, name FROM country WHERE population IS NOT NULL AND population = 0 ORDER BY population ASC LIMIT 1;
 
+9. Using aggregate functions, return the number of countries the database contains.
+SELECT COUNT(name) 
+FROM country
+
+10. What are the top ten largest countries by area?
+SELECT surfacearea, name 
+FROM country 
+ORDER BY surfacearea 
+DESC LIMIT 10;
+
+11.List the five largest cities by population in Japan
+SELECT country.Name, city.Name 
+FROM country 
+JOIN city ON country.code=city.countrycode
+WHERE country.Name='japan';
+
+12. List the names and country codes of every country with Elizabeth II as its Head of State. You will need to fix the mistake first!
+SELECT name, code 
+FROM country 
+WHERE HeadOfState='Elisabeth II';
+
+13. List the top ten countries with the smallest population-to-area ratio. Discard any countries with a ratio of 0.
+
+SELECT Name, SurfaceArea, Population, Population / SurfaceArea  
+FROM country 
+WHERE Population / SurfaceArea > 0
+ORDER BY Population / SurfaceArea ASC, SurfaceArea DESC 
+LIMIT 10;
+
+14.List every unique world language.
+SELECT DISTINCT language
+FROM countrylanguage;
+
+15.List the names and GNP of the world's top 10 richest countries
+SELECT name, gnp 
+FROM country 
+ORDER BY gnp
+DESC LIMIT 10;
+
+
+
